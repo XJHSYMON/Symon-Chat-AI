@@ -1,8 +1,15 @@
 <script setup>
 import { ref } from 'vue'
 
+import { ElMessage } from 'element-plus'
+import router from '@/router/index.js'
+
 const phoneNumberInfo = ref({
   phoneNumber: '',
+  captcha: ''
+})
+const userEmailInfo = ref({
+  emailNumber: '',
   captcha: ''
 })
 const select = ref({
@@ -27,6 +34,59 @@ const startChangeEmailPage = () => {
     loading.value = false
   }, 1000)
 }
+const updateSelect = (value) => {
+  console.log(value)
+}
+
+//校验规则
+const rules = {
+  phoneNumber: [
+    {
+      required: true,
+      message: '请输入手机号',
+      trigger: 'blur'
+    },
+    {
+      validate: (rule, value, callback) => {
+        if (updateSelect.value === 1 || updateSelect.value === 2) {
+          callback({ pattern: /^\S{8}$/, message: '手机号必须是8位数', trigger: 'blur' })
+        } else {
+          callback()
+        }
+        if (updateSelect.value === 3) {
+          callback({ pattern: /^\S{10}$/, message: '手机号必须是10位数', trigger: 'blur' })
+        } else {
+          callback()
+        }
+        if (updateSelect.value === 4) {
+          callback({ pattern: /^\S{11}$/, message: '手机号必须是11位数', trigger: 'blur' })
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
+  emailNumber: [
+    {
+      required: true,
+      message: '请输入邮箱号',
+      trigger: 'blur'
+    },
+    { type: 'email', message: '请输入正确的邮箱号', trigger: ['blur', 'change'] }
+  ],
+  captcha: [
+    {
+      required: true,
+      message: '请输入验证码',
+      trigger: 'blur'
+    }
+  ]
+}
+const login = async () => {
+  ElMessage.success('登入成功')
+  router.push('/article/channel')
+}
 </script>
 
 <template>
@@ -41,39 +101,49 @@ const startChangeEmailPage = () => {
         </div>
       </div>
 
-      <div v-if="isRegister" style="margin-top: -60px">
-        <p class="fontSty">电话号码</p>
-        <el-input
-          v-model="phoneNumberInfo.phoneNumber"
-          placeholder="请输入手机号"
-          class="input-with-select"
-        >
-          <template #prepend>
-            <el-select v-model="select" placeholder="Select" style="width: 115px">
-              <el-option label="+852" value="1" />
-              <el-option label="+853" value="2" />
-              <el-option label="+886" value="3" />
-              <el-option label="+86" value="4" />
-            </el-select>
-          </template>
-        </el-input>
-        <p class="fontSty" style="margin-top: 40px">验证码</p>
-        <el-input
-          v-model="phoneNumberInfo.password"
-          style="max-width: 600px"
-          placeholder="请输入验证码"
-          class="input-with-select"
-        >
-          <template #append>
-            <el-button>获取验证码</el-button>
-          </template>
-        </el-input>
+      <el-form v-if="isRegister" style="margin-top: -60px" :rules="rules" :model="phoneNumberInfo">
+        <el-form-item class="fontSty" prop="phoneNumber">
+          <p>电话号码</p>
+          <el-input
+            v-model="phoneNumberInfo.phoneNumber"
+            placeholder="请输入手机号"
+            class="input-with-select"
+          >
+            <template #prepend>
+              <el-select
+                v-model="select"
+                placeholder="Select"
+                style="width: 115px"
+                @change="updateSelect"
+              >
+                <el-option label="+852" value="1" />
+                <el-option label="+853" value="2" />
+                <el-option label="+886" value="3" />
+                <el-option label="+86" value="4" />
+              </el-select>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item class="fontSty" style="margin-top: 40px" prop="captcha">
+          <p>验证码</p>
+          <el-input
+            v-model="phoneNumberInfo.captcha"
+            style="max-width: 600px"
+            placeholder="请输入验证码"
+            class="input-with-select"
+          >
+            <template #append>
+              <el-button>获取验证码</el-button>
+            </template>
+          </el-input>
+        </el-form-item>
         <el-button
           class="buttonBase"
           type="primary"
           plain
           auto-insert-space
           style="width: 350px; height: 40px"
+          @click="login"
         >
           登入
         </el-button>
@@ -86,40 +156,37 @@ const startChangeEmailPage = () => {
         >
           邮箱登入 →
         </el-link>
-      </div>
-      <div v-else style="margin-top: -60px">
-        <p class="fontSty">邮箱地址</p>
-        <el-input
-          v-model="phoneNumberInfo.phoneNumber"
-          placeholder="请输入邮箱地址"
-          class="input-with-select"
-        >
-          <template #prepend>
-            <el-select v-model="select" placeholder="Select" style="width: 115px">
-              <el-option label="+852" value="1" />
-              <el-option label="+853" value="2" />
-              <el-option label="+886" value="3" />
-              <el-option label="+86" value="4" />
-            </el-select>
-          </template>
-        </el-input>
-        <p class="fontSty" style="margin-top: 40px">验证码</p>
-        <el-input
-          v-model="phoneNumberInfo.password"
-          style="max-width: 600px"
-          placeholder="请输入验证码"
-          class="input-with-select"
-        >
-          <template #append>
-            <el-button>获取验证码</el-button>
-          </template>
-        </el-input>
+      </el-form>
+      <el-form style="margin-top: -60px" :rules="rules" :model="userEmailInfo" v-else>
+        <el-form-item class="fontSty" prop="emailNumber">
+          <p>邮箱地址</p>
+          <el-input
+            v-model="userEmailInfo.email"
+            placeholder="请输入邮箱地址"
+            class="input-with-select"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item class="fontSty" style="margin-top: 40px" prop="captcha"
+          ><p>验证码</p>
+          <el-input
+            v-model="userEmailInfo.captcha"
+            style="max-width: 600px"
+            placeholder="请输入验证码"
+            class="input-with-select"
+          >
+            <template #append>
+              <el-button>获取验证码</el-button>
+            </template>
+          </el-input>
+        </el-form-item>
         <el-button
           class="buttonBase"
           type="primary"
           plain
           auto-insert-space
           style="width: 350px; height: 40px"
+          @click="login"
         >
           登入
         </el-button>
@@ -131,7 +198,7 @@ const startChangeEmailPage = () => {
           style="justify-content: center; align-items: center; letter-spacing: 0.1em"
           >← 手机号登入
         </el-link>
-      </div>
+      </el-form>
     </div>
   </div>
 </template>
@@ -180,8 +247,8 @@ const startChangeEmailPage = () => {
     top: -120px;
   }
   .input-with-select {
-    width: 350px;
-    margin-left: 20px;
+    width: 330px;
+    margin-left: 0;
   }
   :deep(.el-input__wrapper.is-focus) {
     box-shadow: 0 1px 0 0 #409eff;
@@ -207,6 +274,9 @@ const startChangeEmailPage = () => {
   :deep(.el-input-group__append button.el-button):hover {
     background-color: #409eff;
     color: white;
+  }
+  :deep(.el-form-item__error) {
+    margin-left: 12px;
   }
   .buttonBase {
     margin-left: 20px;
