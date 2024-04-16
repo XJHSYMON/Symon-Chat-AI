@@ -71,7 +71,7 @@ const rules = {
     {
       required: true,
       message: '请输入邮箱号',
-      trigger: 'blur'
+      trigger: ['blur']
     },
     { type: 'email', message: '请输入正确的邮箱号', trigger: ['blur', 'change'] }
   ],
@@ -92,18 +92,22 @@ const login = async () => {
 <template>
   <div class="column">
     <div class="container" v-loading="loading">
-      <div>
+      <div style="position: relative">
         <img src="@/assets/food02.png" alt="food" class="pageTop" />
         <div class="userLogo">
-          <p style="position: relative; left: 20px; top: 25px; color: white; font-size: 30px">
-            Self
-          </p>
+          <p style="position: relative; left: 20px; top: 0; color: white; font-size: 30px">Self</p>
         </div>
       </div>
 
-      <el-form v-if="isRegister" style="margin-top: -60px" :rules="rules" :model="phoneNumberInfo">
+      <el-form
+        v-if="isRegister"
+        class="column"
+        style="margin-top: 40px"
+        :rules="rules"
+        :model="phoneNumberInfo"
+      >
         <el-form-item class="fontSty" prop="phoneNumber">
-          <p>电话号码</p>
+          <p class="no-wrap">电话号码</p>
           <el-input
             v-model="phoneNumberInfo.phoneNumber"
             placeholder="请输入手机号"
@@ -124,11 +128,11 @@ const login = async () => {
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item class="fontSty" style="margin-top: 40px" prop="captcha">
-          <p>验证码</p>
+        <el-form-item class="fontSty" style="margin-top: 30px" prop="captcha">
+          <p class="no-wrap">验证码</p>
           <el-input
             v-model="phoneNumberInfo.captcha"
-            style="max-width: 600px"
+            style="width: 330px"
             placeholder="请输入验证码"
             class="input-with-select"
           >
@@ -142,7 +146,7 @@ const login = async () => {
           type="primary"
           plain
           auto-insert-space
-          style="width: 350px; height: 40px"
+          style="width: 330px; height: 40px"
           @click="login"
         >
           登入
@@ -157,21 +161,21 @@ const login = async () => {
           邮箱登入 →
         </el-link>
       </el-form>
-      <el-form style="margin-top: -60px" :rules="rules" :model="userEmailInfo" v-else>
+      <el-form v-else class="column" style="margin-top: 40px" :rules="rules" :model="userEmailInfo">
         <el-form-item class="fontSty" prop="emailNumber">
-          <p>邮箱地址</p>
+          <p class="no-wrap">邮箱地址</p>
           <el-input
-            v-model="userEmailInfo.email"
+            v-model="userEmailInfo.emailNumber"
             placeholder="请输入邮箱地址"
             class="input-with-select"
           >
           </el-input>
         </el-form-item>
-        <el-form-item class="fontSty" style="margin-top: 40px" prop="captcha"
-          ><p>验证码</p>
+        <el-form-item class="fontSty" style="margin-top: 30px" prop="captcha"
+          ><p class="no-wrap">验证码</p>
           <el-input
             v-model="userEmailInfo.captcha"
-            style="max-width: 600px"
+            style="width: 330px"
             placeholder="请输入验证码"
             class="input-with-select"
           >
@@ -217,14 +221,18 @@ const login = async () => {
   align-items: center;
   width: 100%;
   height: 100%;
+  aspect-ratio: auto;
+  overflow: hidden;
 }
 .container {
   background-color: white;
   justify-content: center;
   align-items: center;
-  height: 844px;
-  width: 390px;
+  min-height: 100vh;
+  width: 100vw;
   border-radius: 8px;
+  aspect-ratio: auto;
+  overflow: hidden;
   .fontSty {
     font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
       'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
@@ -233,8 +241,9 @@ const login = async () => {
     letter-spacing: 0.1em;
   }
   .pageTop {
-    width: 390px;
-    height: 337.6px;
+    width: 100%;
+    //height: 337.6px;
+    aspect-ratio: 458/400;
     clip-path: polygon(0 0, 100% 0, 100% 250px, 0 100%);
   }
   .userLogo {
@@ -242,9 +251,10 @@ const login = async () => {
     border-radius: 50%;
     height: 100px;
     width: 100px;
-    position: relative;
-    left: 149px;
-    top: -120px;
+    position: absolute;
+    top: calc(50% + 120px); /* 向下移动 120px */
+    left: 50%;
+    transform: translate(-50%, -50%); /* 先让图片水平垂直居中，再变换绝对位置 */
   }
   .input-with-select {
     width: 330px;
@@ -279,9 +289,8 @@ const login = async () => {
     margin-left: 12px;
   }
   .buttonBase {
-    margin-left: 20px;
-    margin-top: 60px;
-    margin-bottom: 60px;
+    margin-top: 40px;
+    margin-bottom: 40px;
     padding: 25px;
     border-radius: 3px;
     background-color: #ff6666;
@@ -299,6 +308,12 @@ const login = async () => {
     width: 100%;
     display: flex;
     justify-content: space-between;
+  }
+  .no-wrap {
+    //display: inline; /* 设置段落为内联元素 */
+    //white-space: nowrap; /* 阻止文本换行 */
+    display: inline-block; /* 将文段作为块级内联元素显示 */
+    width: 100%; /* 设置文段宽度为100% */
   }
 }
 </style>
