@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: '/login',
-      component: () => import('@/views/login/LoginReset01.vue')
+      component: () => import('@/views/testPage/dropDownBox.vue')
     },
     {
       path: '/',
