@@ -81,6 +81,7 @@ const emit = defineEmits(['success'])
 //提交
 const onPublish = async (state) => {
   formModel.value.state = state
+
   //注意：当前接口，需要的是formData对象
   //需要将当前的普通js对象 => formData对象
   const fd = new FormData()

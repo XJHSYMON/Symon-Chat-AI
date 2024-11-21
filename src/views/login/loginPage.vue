@@ -1,20 +1,20 @@
 <script setup>
-import router from "@/router/index.js";
-import {ref} from 'vue'
-import instance from "@/utils/request.js";
-import {userLoginService,userRegisterService} from "@/api/user.js";
-import {useUserStore} from "@/stores/index.js";
-import {ElMessage} from "element-plus";
-import {useRouter} from "vue-router";
+import router from '@/router/index.js'
+import { ref } from 'vue'
+import instance from '@/utils/request.js'
+import { userLoginService, userRegisterService } from '@/api/user.js'
+import { useUserStore } from '@/stores/index.js'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 const userInfo = ref({
-  username : '',
-  password : '',
+  username: '',
+  password: ''
 })
 const userRegisterInfo = ref({
   username: '',
-  password:'',
-  repassword:'',
+  password: '',
+  repassword: ''
 })
 const userStore = useUserStore()
 
@@ -57,10 +57,10 @@ const login = async () => {
 //
 // }
 const register01 = async () => {
-  const response01 = await userRegisterService(userRegisterInfo.value);
-  console.log(response01);
+  const response01 = await userRegisterService(userRegisterInfo.value)
+  console.log(response01)
   ElMessage.success('注册成功')
-  router.push('/login');
+  router.push('/login')
 }
 </script>
 <!--1.获取值-->
@@ -73,20 +73,18 @@ const register01 = async () => {
 <template>
   <div>
     <div>
-      <input v-model="userRegisterInfo.username" >
-      <input type="password" v-model="userRegisterInfo.password" >
-      <input type="password" v-model="userRegisterInfo.repassword" >
+      <input v-model="userRegisterInfo.username" />
+      <input type="password" v-model="userRegisterInfo.password" />
+      <input type="password" v-model="userRegisterInfo.repassword" />
       <button @click="register01">注册</button>
     </div>
     <div>
-      <input v-model="userInfo.username" >
-      <input type="password" v-model="userInfo.password" >
+      <input v-model="userInfo.username" />
+      <input type="password" v-model="userInfo.password" />
       <button @click="login">登入</button>
     </div>
   </div>
+  <li><router-link to="/statement">隐私协议</router-link></li>
 </template>
 
-<style scoped>
-
-</style>
-
+<style scoped></style>

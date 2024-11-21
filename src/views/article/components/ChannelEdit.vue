@@ -46,6 +46,7 @@ const open = (row) => {
   // 将父组件中的数据回显
   formModel.value = row
 }
+
 //向外暴露方法才能被调用
 defineExpose({ open })
 
